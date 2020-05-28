@@ -1,0 +1,42 @@
+body {
+    background: #6ABBD4;
+    color: #663A82;
+    font-family: monospace;
+}
+.usertext {
+    font-family: monospace;
+    font-weight: bold;
+}
+hr {
+    height: 2px;
+    border: none;
+    background-color: #663A82;
+
+}
+
+ul  {
+    list-style-type: square;
+    font-family: monospace;
+    font-weight: bold;
+}
+
+
+ol  {
+    font-family: monospace;
+    font-weight: bold;
+}
+
+h1  {font-family: monospace;
+     font-weight: bold;
+}
+
+h3  {font-family: monospace;
+     font-weight: bold;
+     font-size: 15pt;
+}
+
+img {
+    width: 50%;
+    border-style: solid;
+    border-color: #663A82;
+}
