@@ -27,6 +27,9 @@ def reverseLettersInWords(text):
     
     return reversedText
 
+def sanitiseFilename(filename):
+    return os.path.basename(os.path.realpath(filename))
+
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -79,12 +82,13 @@ def cattracker():
 
 @app.route('/cattracker/videos')
 def cattrackerVideo():
-    filename = request.args.get('filename')
-    return render_template('cattracker-video.html', filename=filename)
+    filename = sanitiseFilename(request.args.get('filename'))
+    videoFile = VideoFile(os.path.join(videoDir, filename))
+    return render_template('cattracker-video.html', filename=filename, timestamp=videoFile.displayName)
 
 @app.route('/cattracker/videos/<filename>')
 def cattrackerVideoFile(filename):
-    filename = os.path.basename(os.path.realpath(filename))
+    filename = sanitiseFilename(filename)
     return send_from_directory(videoDir, filename)
 
 if __name__ == '__main__':
