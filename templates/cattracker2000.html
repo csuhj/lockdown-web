@@ -1,0 +1,15 @@
+<html>
+<head>
+<link rel="stylesheet" href='/static/style.css' />
+</head>
+<body>
+
+<a href="/">Start again...</a>
+<h1>What has the cat been  up to?</h1>
+<ul>
+{%for video in videos%}
+    <li><a href="/cattracker/videos?filename={{video.filename}}">{{video.displayName}}</a></li>
+{%endfor%}
+</ul>
+</body>
+</html>

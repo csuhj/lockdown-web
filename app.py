@@ -1,9 +1,22 @@
-from flask import Flask, render_template, request
+import argparse
+import datetime
+from flask import Flask, render_template, request, send_from_directory
+import glob
+import json
+import os
 import time
 import threading
+from videofile import VideoFile
 
 app = Flask(__name__)
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
+
+ap = argparse.ArgumentParser()
+ap.add_argument("-c", "--conf", required=True,
+    help="path to the JSON configuration file")
+args = vars(ap.parse_args())
+conf = json.load(open(args["conf"]))
+videoDir = conf["video_dir"];
 
 def reverseLettersInWords(text):
     reversedText = ''
@@ -19,7 +32,6 @@ def index():
     return render_template('index.html')
 
 @app.route('/hello/<name>')
-
 def hello(name):
     return render_template('hello.html', name=name)
 
@@ -53,6 +65,27 @@ def usefulLinks():
 @app.route('/dinosaurs')
 def dinosaurs():
     return render_template('dinosaurs.html')
+
+@app.route('/cattracker')
+def cattracker():
+    fromDateTime = datetime.datetime.now() - datetime.timedelta(days=1)
+    videos = filter (
+        lambda x: x.timestamp >= fromDateTime,
+        sorted(
+            map(VideoFile, glob.glob(os.path.join(videoDir, "*.mp4"))),
+            key=lambda x: x.timestamp, reverse=True)
+        );
+    return render_template('cattracker2000.html', videos=videos)
+
+@app.route('/cattracker/videos')
+def cattrackerVideo():
+    filename = request.args.get('filename')
+    return render_template('cattracker-video.html', filename=filename)
+
+@app.route('/cattracker/videos/<filename>')
+def cattrackerVideoFile(filename):
+    filename = os.path.basename(os.path.realpath(filename))
+    return send_from_directory(videoDir, filename)
 
 if __name__ == '__main__':
     app.run(debug=False, host='0.0.0.0', port=int('80'))
